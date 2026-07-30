@@ -4,3 +4,13 @@ GET {{HelpDesk.Api_HostAddress}}/api/tickets
 Accept: application/json
 
 ###
+
+GET {{HelpDesk.Api_HostAddress}}/api/tickets/1
+Accept: application/json
+
+###
+
+GET {{HelpDesk.Api_HostAddress}}/api/tickets/999
+Accept: application/json
+
+###
