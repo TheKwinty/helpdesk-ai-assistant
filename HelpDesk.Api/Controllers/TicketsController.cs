@@ -64,4 +64,22 @@ public class TicketsController : ControllerBase
             new { id = ticket.Id },
             ticket);
     }
+
+    [HttpPut("{id:int}")]
+    public IActionResult Update(int id, [FromBody] Ticket updatedTicket)
+    {
+        var existingTicket =
+            Tickets.FirstOrDefault(ticket => ticket.Id == id);
+
+        if (existingTicket is null)
+        {
+            return NotFound();
+        }
+
+        existingTicket.Title = updatedTicket.Title;
+        existingTicket.Description = updatedTicket.Description;
+        existingTicket.Priority = updatedTicket.Priority;
+
+        return NoContent();
+    }
 }

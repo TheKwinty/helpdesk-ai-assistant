@@ -31,3 +31,32 @@ GET {{HelpDesk.Api_HostAddress}}/api/tickets/3
 Accept: application/json
 
 ###
+
+PUT {{HelpDesk.Api_HostAddress}}/api/tickets/1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "Cannot sign in to HelpDesk",
+  "description": "The user receives an invalid credentials message when signing in.",
+  "priority": "Medium"
+}
+
+###
+
+GET {{HelpDesk.Api_HostAddress}}/api/tickets/1
+Accept: application/json
+
+###
+
+PUT {{HelpDesk.Api_HostAddress}}/api/tickets/999
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "Ticket does not exist",
+  "description": "This request must return Not Found.",
+  "priority": "Low"
+}
+
+###
