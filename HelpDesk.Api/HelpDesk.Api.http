@@ -14,3 +14,20 @@ GET {{HelpDesk.Api_HostAddress}}/api/tickets/999
 Accept: application/json
 
 ###
+
+POST {{HelpDesk.Api_HostAddress}}/api/tickets
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "Email is not syncing",
+  "description": "Outlook has not received new messages since morning.",
+  "priority": "High"
+}
+
+###
+
+GET {{HelpDesk.Api_HostAddress}}/api/tickets/3
+Accept: application/json
+
+###
