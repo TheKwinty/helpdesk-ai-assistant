@@ -47,4 +47,21 @@ public class TicketsController : ControllerBase
 
         return Ok(ticket);
     }
+
+    [HttpPost]
+    public ActionResult<Ticket> Create([FromBody] Ticket ticket)
+    {
+        var nextId = Tickets.Max(existingTicket => existingTicket.Id) + 1;
+
+        ticket.Id = nextId;
+        ticket.Status = "Open";
+        ticket.CreatedAtUtc = DateTime.UtcNow;
+
+        Tickets.Add(ticket);
+
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = ticket.Id },
+            ticket);
+    }
 }
