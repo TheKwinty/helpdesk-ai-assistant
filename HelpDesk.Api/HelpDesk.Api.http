@@ -60,3 +60,23 @@ Accept: application/json
 }
 
 ###
+
+DELETE {{HelpDesk.Api_HostAddress}}/api/tickets/2
+Accept: application/json
+
+###
+
+GET {{HelpDesk.Api_HostAddress}}/api/tickets/2
+Accept: application/json
+
+###
+
+DELETE {{HelpDesk.Api_HostAddress}}/api/tickets/2
+Accept: application/json
+
+###
+
+DELETE {{HelpDesk.Api_HostAddress}}/api/tickets/999
+Accept: application/json
+
+###

@@ -82,4 +82,19 @@ public class TicketsController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpDelete("{id:int}")]
+    public IActionResult Delete(int id)
+    {
+        var ticket = Tickets.FirstOrDefault(ticket => ticket.Id == id);
+
+        if (ticket is null)
+        {
+            return NotFound();
+        }
+
+        Tickets.Remove(ticket);
+
+        return NoContent();
+    }
 }
