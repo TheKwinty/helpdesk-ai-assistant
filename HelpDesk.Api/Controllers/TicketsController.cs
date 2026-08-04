@@ -1,4 +1,5 @@
 using HelpDesk.Api.Models;
+using HelpDesk.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HelpDesk.Api.Controllers;
@@ -7,38 +8,23 @@ namespace HelpDesk.Api.Controllers;
 [Route("api/[controller]")]
 public class TicketsController : ControllerBase
 {
-    private static readonly List<Ticket> Tickets =
-    [
-        new()
-        {
-            Id = 1,
-            Title = "Cannot sign in",
-            Description = "The user cannot sign in to the HelpDesk portal.",
-            Status = "Open",
-            Priority = "High",
-            CreatedAtUtc = new DateTime(2026, 7, 28, 8, 30, 0, DateTimeKind.Utc)
-        },
-        new()
-        {
-            Id = 2,
-            Title = "Printer is offline",
-            Description = "The office printer is not available on the network.",
-            Status = "In Progress",
-            Priority = "Medium",
-            CreatedAtUtc = new DateTime(2026, 7, 28, 9, 15, 0, DateTimeKind.Utc)
-        }
-    ];
+    private readonly TicketService _ticketService;
+
+    public TicketsController(TicketService ticketService)
+    {
+        _ticketService = ticketService;
+    }
 
     [HttpGet]
     public ActionResult<IEnumerable<Ticket>> GetAll()
     {
-        return Ok(Tickets);
+        return Ok(_ticketService.GetAll());
     }
 
     [HttpGet("{id:int}")]
     public ActionResult<Ticket> GetById(int id)
     {
-        var ticket = Tickets.FirstOrDefault(ticket => ticket.Id == id);
+        var ticket = _ticketService.GetById(id);
 
         if (ticket is null)
         {
@@ -51,34 +37,21 @@ public class TicketsController : ControllerBase
     [HttpPost]
     public ActionResult<Ticket> Create([FromBody] Ticket ticket)
     {
-        var nextId = Tickets.Max(existingTicket => existingTicket.Id) + 1;
-
-        ticket.Id = nextId;
-        ticket.Status = "Open";
-        ticket.CreatedAtUtc = DateTime.UtcNow;
-
-        Tickets.Add(ticket);
+        var createdTicket = _ticketService.Create(ticket);
 
         return CreatedAtAction(
             nameof(GetById),
-            new { id = ticket.Id },
-            ticket);
+            new { id = createdTicket.Id },
+            createdTicket);
     }
 
     [HttpPut("{id:int}")]
     public IActionResult Update(int id, [FromBody] Ticket updatedTicket)
     {
-        var existingTicket =
-            Tickets.FirstOrDefault(ticket => ticket.Id == id);
-
-        if (existingTicket is null)
+        if (!_ticketService.Update(id, updatedTicket))
         {
             return NotFound();
         }
-
-        existingTicket.Title = updatedTicket.Title;
-        existingTicket.Description = updatedTicket.Description;
-        existingTicket.Priority = updatedTicket.Priority;
 
         return NoContent();
     }
@@ -86,14 +59,10 @@ public class TicketsController : ControllerBase
     [HttpDelete("{id:int}")]
     public IActionResult Delete(int id)
     {
-        var ticket = Tickets.FirstOrDefault(ticket => ticket.Id == id);
-
-        if (ticket is null)
+        if (!_ticketService.Delete(id))
         {
             return NotFound();
         }
-
-        Tickets.Remove(ticket);
 
         return NoContent();
     }
