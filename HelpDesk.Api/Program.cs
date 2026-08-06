@@ -1,11 +1,19 @@
+using HelpDesk.Api.Data;
 using HelpDesk.Api.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException(
+        "Connection string 'DefaultConnection' was not found.");
 
 // Add services to the container.
 
 builder.Services.AddControllers();
 builder.Services.AddSingleton<TicketService>();
+builder.Services.AddDbContext<HelpDeskDbContext>(options =>
+    options.UseSqlServer(connectionString));
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
